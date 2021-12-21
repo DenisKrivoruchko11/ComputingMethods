@@ -1,6 +1,5 @@
 from math import exp
 from functools import reduce
-from numpy import arange
 
 
 def lagrange(t, x):
@@ -13,20 +12,22 @@ def lagrange(t, x):
 
 def newton(t, x):
     def get_result(k):
-        return (get_result(k - 1) if k > 0 else 0) + reduce(lambda v, j: v * (x - j), ks[:k - 1], 1) * dif[k][0]
+        s = 1
+        for m in range(k):
+            s *= x - ks[m]
+
+        return (get_result(k - 1) if k > 0 else 0) + s * dif[k][0]
 
     ks = list(t)
     vs = list(t.values())
-    l = len(t)
+    n = len(t) - 1
 
-    dif = []
-    for i in range(l):
-        dif.append(list(map(lambda j: ks[j] if i == 0 else
-                                      vs[j] if i == 1 else
-                                      (dif[i - 1][j + 1] - dif[i - 1][j]) / (ks[j + i - 1] - ks[j]),
-                            range(l - i))))
+    dif = list(map(lambda _: list(map(lambda _: 0, range(n + 1))), range(n + 1)))
+    for i in range(n + 1):
+        for j in range(n + 1 - i):
+            dif[i][j] = vs[j] if i == 0 else (dif[i - 1][j + 1] - dif[i - 1][j]) / (ks[j + i] - ks[j])
 
-    return get_result(l - 1)
+    return get_result(n)
 
 
 def main():
@@ -40,7 +41,8 @@ def main():
     a = float(input('Введите левый конец отрезка a: '))
     b = float(input('Введите правый конец отрезка b: '))
 
-    table = dict(map(lambda i: (i, f(i)), arange(a, b, (b - a) / m)))
+    table = dict(map(lambda i: (a + i * (b - a) / m, f(a + i * (b - a) / m)), range(m + 1)))
+
     print(f"Полученная таблица в формате (x, f(x)): {table}")
 
     while True:

@@ -1,5 +1,4 @@
 from math import exp
-from numpy import arange
 
 
 def get_info(t, h, df, df2):
@@ -29,11 +28,20 @@ def main():
         a = float(input('Введите левый конец отрезка a: '))
         h = float(input('Введите шаг h: '))
 
-        table = dict(map(lambda i: (i, f(i)), arange(a, a + h * m, h)))
-        print(f"Полученная таблица в формате (x, f(x)): \n{table}")
+        table = dict(map(lambda j: (a + j * h, f(a + j * h)), range(m + 1)))
 
-        print(f"Результат в формате (x, f(x), f'(x), |f'(x)_Т - f'(x)_ЧД|, f''(x), |f''(x)_Т - f''(x)_ЧД|: \n"
-              f"{get_info(table, h, lambda x: 6 * f(x), lambda x: 36 * f(x))}")
+        print("Полученная таблица: \n")
+        print("{:<10} {:<20}".format('x', 'f(x)'))
+        for i in table.items():
+            print("{:<8} {:<15}".format(i[0], i[1]))
+
+        r = get_info(table, h, lambda x: 6 * f(x), lambda x: 36 * f(x))
+
+        print("Результат: \n")
+        print("{:<10} {:<30} {:<30} {:<30} {:<30} {:<30}"
+              .format('x', 'f(x)', "f'(x)", "|f'(x)_Т - f'(x)_ЧД|", "f''(x)", "|f''(x)_Т - f''(x)_ЧД|"))
+        for i in r:
+            print("{:<10} {:<30} {:<30} {:<30} {:<30} {:<30}".format(i[0], i[1], i[2], i[3], i[4], i[5]))
 
         if input("Для выхода нажмите 1. Для продолжения --- любую клавишу.") == "1":
             break
