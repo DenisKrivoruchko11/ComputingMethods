@@ -12,7 +12,7 @@ def get_info(t, h, df, df2):
         d1 = d(cur, 1)
         d2 = d(cur, 2)
         ks = list(t)
-        return cur, t.get(ks[cur]), d1, abs(df(ks[cur]) - d1), d2, abs(df2(ks[cur]) - d2)
+        return ks[cur], t.get(ks[cur]), d1, abs(df(ks[cur]) - d1), d2, abs(df2(ks[cur]) - d2)
 
     return list(map(lambda i: cur_info(i), range(len(t))))
 
